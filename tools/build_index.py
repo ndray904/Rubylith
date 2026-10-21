@@ -1,7 +1,7 @@
-# app/rubylith.html is the page as published to claude.ai (the artifact host adds the document skeleton).
-# This wraps it into app/index.html so the same app runs from any static web server.
+# docs/rubylith.html is the page as published to claude.ai (the artifact host adds the document skeleton).
+# This wraps it into docs/index.html so the same app runs from any static web server.
 import pathlib
-app = pathlib.Path(__file__).resolve().parent.parent / "app"
+app = pathlib.Path(__file__).resolve().parent.parent / "docs"
 body = (app / "rubylith.html").read_text(encoding="utf-8")
 (app / "index.html").write_text(
     '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
