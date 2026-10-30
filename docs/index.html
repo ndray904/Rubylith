@@ -339,6 +339,8 @@ const $ = (id) => document.getElementById(id);
 const ORT_DIST = "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/";
 const ORT_URL = ORT_DIST + "ort.webgpu.min.js";   // WebGPU + WebAssembly runtime; its .wasm ships with the page
 const JSPDF_URL = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+// the Windows app (desktop/) ships the models on disk: no browser cache needed
+const DESKTOP = /RubylithDesktop/.test(navigator.userAgent);
 // model weights and the runtime's .wasm ship as base64 text chunks next to the page; size = bytes on the wire
 const MODELS = {
   // BiRefNet-lite (MIT): weights stored as fp16, widened to fp32 at load; outputs logits
@@ -476,6 +478,7 @@ async function modelDo(mode, fn) {
 }
 const CACHED = () => new Set([RUNTIME.dir, ...Object.values(MODELS).filter((m) => m.dir).map((m) => m.dir)]);
 async function fetchResource(res, total, label, start = 0) {
+  if (DESKTOP) return downloadResource(res, total, label.replace("Downloading the", "Loading the"), start);
   try {
     const hit = await modelDo("readonly", (st) => st.get(res.dir));
     if (hit && hit.byteLength === res.raw) { showBusy(label.replace("Downloading the", "Loading the saved"), 1, "From this browser's storage"); return new Uint8Array(hit); }
@@ -497,6 +500,7 @@ async function clearSavedModels() {
   showCacheSize();
 }
 async function showCacheSize() {
+  if (DESKTOP) { $("cacheInfo").textContent = "models built in"; $("clearModels").hidden = true; return; }
   let mb = 0;
   try { const keys = await modelDo("readonly", (st) => st.getAllKeys()); const all = [RUNTIME, ...Object.values(MODELS)]; for (const k of keys) { const r = all.find((x) => x.dir === k); if (r) mb += r.raw / 1048576; } } catch {}
   $("cacheInfo").textContent = mb ? `models saved in this browser (${Math.round(mb)} MB)` : "models download once, then stay saved in this browser";

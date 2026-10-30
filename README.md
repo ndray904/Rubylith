@@ -6,6 +6,9 @@ Nothing is uploaded: the AI models run on the device.
 
 **Use it here: https://ndray904.github.io/Rubylith/**
 
+**Windows app:** download `Rubylith-Setup-<version>.exe` from [Releases](https://github.com/ndray904/Rubylith/releases) and run it.
+Both AI models are built in, so it works offline with nothing else to install.
+
 ## Features
 
 - **Two AI models**
@@ -47,6 +50,18 @@ python3 -m http.server 8000 -d docs
 ```
 
 Then open http://localhost:8000. WebGPU, which BiRefNet needs, only works on `localhost` or over HTTPS.
+
+## Windows app
+
+`desktop/` wraps the same page in Electron, which brings its own Chromium with WebGPU, so BiRefNet runs on the GPU.
+The installer carries both models, the ONNX Runtime engine, jsPDF and the fonts, so the app needs no internet.
+`desktop/prepare.js` assembles these into `desktop/web/` at build time and points the page at them.
+
+- **Build a release:** push a tag such as `desktop-v1.0.1`.
+  The *Windows app* workflow builds `Rubylith-Setup-1.0.1.exe` on a Windows runner and attaches it to a new GitHub Release.
+  The version comes from `desktop/package.json`, so bump it first.
+- **Run it locally:** `cd desktop && npm ci && npm start`.
+- **The installer isn't code-signed,** so Windows SmartScreen shows a warning on first run.
 
 ## How BiRefNet was made to work on WebGPU
 

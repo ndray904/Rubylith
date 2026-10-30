@@ -1,0 +1,78 @@
+{
+  "name": "rubylith",
+  "productName": "Rubylith",
+  "version": "1.0.0",
+  "description": "Background remover with built-in AI models. Nothing is uploaded.",
+  "author": "ndray904",
+  "license": "AGPL-3.0-only",
+  "homepage": "https://github.com/ndray904/Rubylith",
+  "main": "main.js",
+  "scripts": {
+    "prepare-web": "node prepare.js",
+    "start": "node prepare.js && electron .",
+    "dist": "node prepare.js && electron-builder --win nsis --x64"
+  },
+  "devDependencies": {
+    "@fontsource-variable/bricolage-grotesque": "5.3.0",
+    "@fontsource/instrument-sans": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "electron": "44.7.0",
+    "electron-builder": "26.17.0",
+    "jspdf": "2.5.1",
+    "onnxruntime-web": "1.22.0"
+  },
+  "build": {
+    "appId": "io.github.ndray904.rubylith",
+    "productName": "Rubylith",
+    "copyright": "Copyright (C) 2026 ndray904",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "web",
+        "to": "web"
+      }
+    ],
+    "extraFiles": [
+      {
+        "from": "../LICENSE",
+        "to": "LICENSE.txt"
+      },
+      {
+        "from": "../THIRD_PARTY.md",
+        "to": "THIRD_PARTY.md"
+      },
+      {
+        "from": "../licenses",
+        "to": "licenses"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Rubylith",
+      "artifactName": "Rubylith-Setup-${version}.exe",
+      "license": "../LICENSE"
+    }
+  }
+}
